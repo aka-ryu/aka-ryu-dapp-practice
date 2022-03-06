@@ -1,23 +1,37 @@
 import React, { useState } from "react";
+import erc20Abi from '../erc20Abi';
 require('dotenv').config();
-const Web3 = require('web3');
 
+const Web3 = require('web3');
+const rAbi = erc20Abi;
+const RyuTokenAddress = process.env.RYU_TOKKEN_ADDRESS;
 const Address    = process.env.REACT_APP_ADDRESS;
 const RpcHttpUrl = "https://rinkeby.infura.io/v3/5e615f36ce9e48aebe567535a3fbbaab"
 const web3       = new Web3(new Web3.providers.HttpProvider(RpcHttpUrl));
+const Contract = require('web3-eth-contract');
+const contract = new Contract(rAbi, RyuTokenAddress)
 
 
 function Admin(props) {
 
     const [etherBalance, setEtherBalance] = useState("");
+    const [rBalance, setrBalance] = useState("");
 
-    async function getBalance(){
-        const balance = await web3.eth.getBalance("0x6202E5Ad8FF6bf1B8002c49011127eadFf38dD88");
+    async function etgetBalance(){
+        const etbalance = await web3.eth.getBalance(Address);
 
-        const weiBalance = web3.utils.fromWei(balance, 'Ether');
+        const weiBalance = web3.utils.fromWei(etbalance, 'Ether');
         setEtherBalance(weiBalance);
     }
-    getBalance();
+
+    async function rGetBalance(){
+        const rBalance = await contract.methods.balanceOf(Address).call();
+        const format = web3.utils.fromWei(rBalance);
+        setrBalance(format);
+    }
+
+    etgetBalance();
+    rGetBalance();
 
     return(
         <div>
@@ -27,7 +41,8 @@ function Admin(props) {
             <div className="admin">
                 <h3>Admin Tab</h3>
                 Adress    :   {Address}<br/>
-                balance   :   {etherBalance} ETH
+                balance   :   {etherBalance} ETH <br/>
+                balance   :   {rBalance} RYU
             </div>
         </div>
     )
