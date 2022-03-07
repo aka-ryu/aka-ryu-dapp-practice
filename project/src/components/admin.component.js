@@ -22,7 +22,6 @@ function Admin(props) {
     const [userRttkBalance, setUserRttkBalance] = useState("unknown");
     const [userConnect, setUserConnect] = useState("Click => Connect Your MetaMask");
     const [userWallet, setUserWallet] = useState("");
-    const transferValue = 1;
 
     async function getAdminWallet() {
         const etherBalance = await web3.eth.getBalance(adminAddress);
@@ -96,7 +95,7 @@ function Admin(props) {
         //         window.alert("succes");
         //     }
         // })
-        const nonce = web3.eth.getTransactionCount(adminAddress);
+        // const nonce = web3.eth.getTransactionCount(adminAddress);
         const data = rttk.methods.transfer(userWallet, 100).encodeABI();
         const tx = {
             from : adminAddress,
